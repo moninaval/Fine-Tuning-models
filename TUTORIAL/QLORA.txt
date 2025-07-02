@@ -1,0 +1,52 @@
+How QLoRA Works
+All weights inside the transformer block are quantized to 4-bit and frozen.
+Examples:
+
+Attention: q_proj, k_proj, v_proj, out_proj
+
+Feedforward: w0, w1, fc1, fc2
+
+🔒 These are:
+
+Loaded in 4-bit (bnb_4bit)
+
+Frozen
+
+Not trainable directly
+
+✅ But you can inject LoRA adapters into some or all of these via target_modules.
+These adapters are full-precision, trainable, and added during training.
+
+❗ You choose which of these quantized weights get LoRA adapters — that’s configurable.
+
+
+
+Weights outside the transformer block are not quantized, and can be optionally trained.
+Examples:
+
+embed_tokens (input embedding layer)
+
+lm_head (output layer)
+
+LayerNorm modules
+
+These are:
+
+Left in full precision (e.g., FP16 or BF16)
+
+Frozen by default
+
+Can be unfrozen via config for training
+
+✅ If you choose to train these, their new weights will replace the originals after training (e.g., lm_head.weight = trained_lm_head.weight)
+
+
+Transformer block:
+  q_proj  = [4-bit frozen] + [LoRA adapter] ✅
+  v_proj  = [4-bit frozen] + [LoRA adapter] ✅
+  w1      = [4-bit frozen] + [LoRA adapter] ✅
+
+Outside block:
+  lm_head = [trained full-precision] ✅ (if enabled)
+  embed_tokens = [trained full-precision] ✅ (if enabled)
+  norm_layers = [optional training] ✅

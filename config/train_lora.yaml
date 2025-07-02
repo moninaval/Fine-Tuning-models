@@ -1,0 +1,23 @@
+peft:
+  mode: lora                      # Full-precision base model + LoRA adapters
+  task_type: "CAUSAL_LM"
+  target_modules:
+    - q_proj
+    - v_proj
+    - w1
+    # Original base weights (q_proj, v_proj, etc.) are in full precision
+    # They are frozen by default unless manually unfrozen
+
+  lora_r: 8
+  lora_alpha: 16
+  lora_dropout: 0.05
+  bias: "none"
+
+  trainable_parts:
+    train_embeddings: false       # Optional: train input embeddings
+    train_output_head: true       # Optional: train output head (lm_head)
+    train_norm_layers: false      # Optional: train LayerNorm layers
+    # Note: Full model weights are in FP16/FP32, but only adapters + above parts are trainable
+
+quantization:
+  enabled: false                  # No quantization in LoRA mode

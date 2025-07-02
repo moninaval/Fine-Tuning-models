@@ -1,5 +1,0 @@
-model:
-  name_or_path: "mistralai/Mistral-7B-v0.1"
-  tokenizer_name: "mistralai/Mistral-7B-v0.1"
-  model_type: "causal"
-  max_length: 4096
