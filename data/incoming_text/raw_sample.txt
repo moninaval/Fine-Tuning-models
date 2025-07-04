@@ -1,0 +1,3 @@
+JIRA-102: The login module crashes when invalid credentials are entered three times. 
+This issue affects production. 
+Please investigate and patch the authentication service.

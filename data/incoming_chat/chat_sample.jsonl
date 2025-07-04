@@ -1,0 +1,12 @@
+{"messages": [
+  {"role": "user", "content": "How do I create a new branch in Git?"},
+  {"role": "assistant", "content": "Use `git checkout -b branch-name` to create and switch to a new branch."}
+]}
+{"messages": [
+  {"role": "user", "content": "What's the capital of France?"},
+  {"role": "assistant", "content": "The capital of France is Paris."}
+]}
+{"messages": [
+  {"role": "user", "content": "Can you explain what a pull request is?"},
+  {"role": "assistant", "content": "A pull request lets you propose changes to a repository and request that someone review and merge them."}
+]}

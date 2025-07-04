@@ -1,0 +1,22 @@
+# Core LLM libraries
+transformers==4.40.1
+datasets==2.19.0
+tokenizers==0.15.1
+
+# LoRA & QLoRA
+peft==0.10.0
+accelerate==0.29.3
+bitsandbytes==0.43.1
+
+# Logging & monitoring (optional but useful)
+tqdm
+wandb
+
+# PyTorch (adjust version based on system/GPU)
+torch>=2.1.0
+
+# For YAML config parsing
+pyyaml
+
+# File utilities
+huggingface_hub

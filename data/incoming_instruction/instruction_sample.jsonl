@@ -1,0 +1,4 @@
+{"instruction": "Summarize the Jira issue.", "input": "JIRA-102: Login module crashes after three failed login attempts.", "output": "Login module crashes on repeated failed attempts."}
+{"instruction": "Rewrite the sentence in passive voice.", "input": "The developer fixed the bug.", "output": "The bug was fixed by the developer."}
+{"instruction": "Classify the sentiment.", "input": "I'm disappointed with the update. It's full of bugs.", "output": "Negative"}
+{"instruction": "Extract the file name from the log.", "input": "[ERROR] Failed to open file config.yaml in config_loader.py", "output": "config.yaml"}

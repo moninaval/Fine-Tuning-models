@@ -1,16 +1,15 @@
 peft:
   mode: qlora
   task_type: "CAUSAL_LM"
-  target_modules: ["q_proj", "v_proj", "w1"]     # w0, w1, fc1, fc2  are wights that can be included as per use case (All are transformer block weights)
+  target_modules: ["q_proj", "v_proj", "w1"]
   lora_r: 8
   lora_alpha: 16
   lora_dropout: 0.05
   bias: "none"
-
   trainable_parts:
-    train_embeddings: false                   #outside transformer block
-    train_output_head: true                   #outside transformer block
-    train_norm_layers: false                  #outside transformer block
+    train_embeddings: false
+    train_output_head: true
+    train_norm_layers: false
 
 quantization:
   enabled: true
@@ -18,3 +17,21 @@ quantization:
   bnb_4bit_compute_dtype: "float16"
   bnb_4bit_use_double_quant: true
   bnb_4bit_quant_type: "nf4"
+
+train:  # 👈 This block is required by train_step.py
+  output_dir: "checkpoints"
+  max_steps: 100                       //if you have 123456 examples(chunks) to train make batch size 12345/100
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 2
+  num_train_epochs: 1   # Optional fallback if max_steps isn't used ,that is how many pass you need to train (like video encoding)
+  learning_rate: 2e-4       #Wq = Wq - learning_rate * ∇Wq
+  eval_steps: 100          #log will be produced after these steps
+  save_steps: 100
+  save_total_limit: 2
+  logging_steps: 20
+  use_fp16: false
+  use_bf16: true
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.05
+  seed: 42
+  report_to: "none"
