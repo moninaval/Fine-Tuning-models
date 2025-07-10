@@ -4,6 +4,8 @@ import argparse
 from datasets import Dataset
 from transformers import AutoTokenizer
 
+SEEN_FILE = "seen_datasets.json"
+
 def load_instruction_jsonl(path):
     with open(path, "r", encoding="utf-8") as f:
         return [json.loads(line) for line in f]
@@ -34,6 +36,16 @@ def tokenize_examples(examples, tokenizer, max_len):
     model_inputs["labels"] = labels
     return model_inputs
 
+def load_seen(path=SEEN_FILE):
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            return set(json.load(f))
+    return set()
+
+def update_seen(seen, path=SEEN_FILE):
+    with open(path, "w") as f:
+        json.dump(sorted(list(seen)), f, indent=2)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_id", required=True)
@@ -46,12 +58,11 @@ def main():
     seq_len = tokenizer.model_max_length
     print(f"🔹 Tokenizer max length = {seq_len}")
 
-    files = [f for f in os.listdir(args.input_dir) if f.endswith(".jsonl")]
-    seen_file = "seen_datasets.json"
-    seen = set(json.load(open(seen_file))) if os.path.exists(seen_file) else set()
+    seen = load_seen()
+    files = sorted(f for f in os.listdir(args.input_dir) if f.endswith(".jsonl"))
     count = 0
 
-    for file in sorted(files):
+    for file in files:
         if file in seen:
             continue
 
@@ -65,23 +76,15 @@ def main():
         out_folder = os.path.join(args.output_dir, file.replace(".jsonl", ""))
         os.makedirs(out_folder, exist_ok=True)
 
-        # Save to disk
         dataset.save_to_disk(out_folder)
-
-        # Also save .jsonl
-        out_jsonl = os.path.join(out_folder, "tokenized.jsonl")
-        with open(out_jsonl, "w", encoding="utf-8") as f:
-            for i in range(len(dataset)):
-                f.write(json.dumps({k: dataset[k][i] for k in dataset.column_names}) + "\n")
+        print(f"✅ Saved tokenized dataset to: {out_folder}")
 
         seen.add(file)
         count += 1
         if args.max_files and count >= args.max_files:
             break
 
-    with open(seen_file, "w") as f:
-        json.dump(sorted(list(seen)), f, indent=2)
-
+    update_seen(seen)
     print("✅ Instruction dataset preparation complete.")
 
 if __name__ == "__main__":

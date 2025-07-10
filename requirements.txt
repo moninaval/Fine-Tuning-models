@@ -8,6 +8,7 @@ tokenizers>=0.19.1
 peft==0.10.0
 accelerate==0.29.3
 bitsandbytes==0.43.1
+triton==2.1.0
 
 # Logging & monitoring (optional but useful)
 tqdm

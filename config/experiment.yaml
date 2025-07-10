@@ -1,4 +1,4 @@
 experiment:
-  name: "phi2-qlora-jira-tuning"
+  name: "phi3-qlora-jira-tuning"
   notes: "QLoRA training on Jira + PDF with adapters in attention and FFN layers."
-  tags: ["phi2", "qlora", "unsupervised", "peft"]
+  tags: ["phi2", "qlora", "superivised instrcution", "peft"]
