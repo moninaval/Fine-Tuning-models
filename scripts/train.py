@@ -69,7 +69,16 @@ def main():
     )
 
     print("🚀 Starting training...")
-    trainer.train(resume_from_checkpoint=True)
+    
+    # After creating `trainer = Trainer(...)` and setting everything up
+    checkpoint_path = os.path.join(training_args.output_dir, "checkpoint-0")
+
+    if os.path.exists(checkpoint_path):
+        print(f"✅ Resuming training from {checkpoint_path}")
+        trainer.train(resume_from_checkpoint=True)
+    else:
+        print("🚀 Starting training from scratch")
+        trainer.train()
     print("✅ Training completed.")
 
 if __name__ == "__main__":
