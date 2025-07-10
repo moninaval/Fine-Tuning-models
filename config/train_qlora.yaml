@@ -1,7 +1,7 @@
 peft:
   mode: qlora
   task_type: "CAUSAL_LM"
-  target_modules: ["q_proj", "v_proj", "w1"]
+  target_modules: ["qkv_proj", "o_proj", "gate_up_proj", "down_proj"]  # ✅ Valid for Phi-3
   lora_r: 8
   lora_alpha: 16
   lora_dropout: 0.05
@@ -18,20 +18,20 @@ quantization:
   bnb_4bit_use_double_quant: true
   bnb_4bit_quant_type: "nf4"
 
-train:  # 👈 This block is required by train_step.py
+train:
   output_dir: "checkpoints"
-  max_steps: 100                       //if you have 123456 examples(chunks) to train make batch size 12345/100
+  max_steps: 100                           # Train for 100 steps
   per_device_train_batch_size: 4
   gradient_accumulation_steps: 2
-  num_train_epochs: 1   # Optional fallback if max_steps isn't used ,that is how many pass you need to train (like video encoding)
-  learning_rate: 2e-4       #Wq = Wq - learning_rate * ∇Wq
-  eval_steps: 100          #log will be produced after these steps
-  save_steps: 100
-  save_total_limit: 2
-  logging_steps: 20
+  num_train_epochs: 1                      # Optional if max_steps isn't hit
+  learning_rate: 2e-4                      # Learning rate for adapter layers
+  eval_steps: 100                          # Evaluation and logging every 100 steps
+  save_steps: 100                          # Save checkpoint every 100 steps
+  save_total_limit: 2                      # Keep only 2 checkpoints
+  logging_steps: 20                        # Log every 20 steps
   use_fp16: false
-  use_bf16: true
+  use_bf16: true                           # Set based on your Colab GPU support
   lr_scheduler_type: "cosine"
-  warmup_ratio: 0.05
+  warmup_ratio: 0.05                       # 5% warmup steps for LR scheduler
   seed: 42
-  report_to: "none"
+  report_to: "none"                        # No W&B or other reporters
