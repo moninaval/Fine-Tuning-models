@@ -2,7 +2,7 @@
 transformers==4.40.1
 datasets==2.19.0
 tokenizers>=0.19.1
-
+huggingface_hub
 
 # LoRA & QLoRA
 peft==0.10.0
@@ -10,15 +10,15 @@ accelerate==0.29.3
 bitsandbytes==0.43.1
 triton==2.1.0
 
-# Logging & monitoring (optional but useful)
+# PyTorch for Colab (already pre-installed, but you can force the version if needed)
+# torch==2.1.2+cu121  # Don't install unless needed; Colab comes with torch preinstalled
+
+# Logging & monitoring (optional)
 tqdm
 wandb
 
-# PyTorch (adjust version based on system/GPU)
-torch>=2.1.0
-
-# For YAML config parsing
+# Config file support
 pyyaml
 
-# File utilities
-huggingface_hub
+# Compatibility: Force safe NumPy version
+numpy<2.0
