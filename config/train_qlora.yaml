@@ -29,8 +29,8 @@ train:
   save_steps: 100                          # Save checkpoint every 100 steps
   save_total_limit: 2                      # Keep only 2 checkpoints
   logging_steps: 20                        # Log every 20 steps
-  use_fp16: false
-  use_bf16: true                           # Set based on your Colab GPU support
+  use_fp16: true
+  use_bf16: false                           # Set based on your Colab GPU support
   lr_scheduler_type: "cosine"
   warmup_ratio: 0.05                       # 5% warmup steps for LR scheduler
   seed: 42
