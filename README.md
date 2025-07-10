@@ -48,4 +48,5 @@ After tokenizing, train the model using:
 python train.py \
   --train_config config/train_qlora.yaml \
   --model_config config/model_phi3.yaml \
-  --experiment_config config/experiment.yaml
+  --experiment_config config/experiment.yaml \
+  --dataset_name alpaca 

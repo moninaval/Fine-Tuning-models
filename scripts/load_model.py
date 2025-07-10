@@ -8,7 +8,7 @@ def load_yaml(path):
         return yaml.safe_load(f)
 
 def load_model(model_config, train_config):
-    model_name = model_config["model"]["name_or_path"]
+    model_name = model_config["model"]["base_model_id"]
     tokenizer_name = model_config["model"].get("tokenizer_name", model_name)
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
