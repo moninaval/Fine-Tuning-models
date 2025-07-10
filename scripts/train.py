@@ -50,7 +50,7 @@ def main():
         eval_steps=tcfg["eval_steps"],
         save_steps=tcfg["save_steps"],
         save_total_limit=tcfg.get("save_total_limit", 2),
-        learning_rate=tcfg["learning_rate"],
+        learning_rate=float(tcfg["learning_rate"]),
         logging_steps=tcfg["logging_steps"],
         report_to="none",
         fp16=tcfg.get("use_fp16", False),
