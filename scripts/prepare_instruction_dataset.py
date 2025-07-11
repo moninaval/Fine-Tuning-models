@@ -22,7 +22,7 @@ def tokenize_examples(examples, tokenizer, max_len):
         input_texts,
         max_length=max_len,
         truncation=True,
-        padding=False
+        padding="max_length"
     )
 
     with tokenizer.as_target_tokenizer():
@@ -30,7 +30,7 @@ def tokenize_examples(examples, tokenizer, max_len):
             target_texts,
             max_length=max_len,
             truncation=True,
-            padding=False
+            padding="max_length"
         )["input_ids"]
 
     model_inputs["labels"] = labels
