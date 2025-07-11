@@ -25,16 +25,16 @@ This project supports fine-tuning large language models like Phi-2 or Phi-3 usin
 ├── prepare_instruction_dataset.py
 ├── prepare_chat_dataset.py
 ├── train.py
-
-
  Dataset Preparation
-1.Prepare from raw .txt
+1.	Tokenize from raw .txt
 python scripts/prepare_dataset.py --model_id microsoft/phi-3-mini-4k-instruct --input_dir data/incoming_instruction --output_dir data/tokenized/
-2.Prepare from instruction .jsonl
+
+2.	tokenize from instruction .jsonl
 python scripts/prepare_instruction_dataset.py --model_id microsoft/phi-3-mini-4k-instruct --input_dir data/incoming_instruction --output_dir data/tokenized/
 
-3.Prepare from chat .jsonl
+3.	tokenize from chat .jsonl
 python scripts/prepare_chat_dataset.py --model_id microsoft/phi-3-mini-4k-instruct --input_dir data/incoming_instruction --output_dir data/tokenized/
-4.Fine-Tune the Model
+4.	Fine-Tune the Model
 After tokenizing, train the model using:
 python scripts/train.py --train_config config/train_qlora.yaml --model_config config/model_phi3.yaml --experiment_config config/experiment.yaml --dataset_name alpaca
+
