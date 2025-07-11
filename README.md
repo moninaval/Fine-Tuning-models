@@ -18,23 +18,25 @@ This project supports fine-tuning large language models like Phi-2 or Phi-3 usin
 │   ├── incoming_chat/          # Chat .jsonl files
 │   └── tokenized/              # Output tokenized datasets (.arrow)
 │
-├── checkpoints/                # Model checkpoints
-├── config/                     # YAML configuration files
-├── seen_datasets.json          # Tracks processed files
+├── checkpoints/                # Model checkpoints (LoRA adapters + optimizer state)
+├── config/                     # YAML configuration files for training
+├── seen_datasets.json          # Tracks already tokenized files
 ├── prepare_raw_text_dataset.py
 ├── prepare_instruction_dataset.py
 ├── prepare_chat_dataset.py
-├── train.py
+├── train.py                    # QLoRA training entry point
+
+
+
  Dataset Preparation
-1.	Tokenize from raw .txt
+1.	Tokenize from raw .txt:
 python scripts/prepare_dataset.py --model_id microsoft/phi-3-mini-4k-instruct --input_dir data/incoming_instruction --output_dir data/tokenized/
 
-2.	tokenize from instruction .jsonl
+2.	tokenize from instruction .jsonl:
 python scripts/prepare_instruction_dataset.py --model_id microsoft/phi-3-mini-4k-instruct --input_dir data/incoming_instruction --output_dir data/tokenized/
 
-3.	tokenize from chat .jsonl
+3.	tokenize from chat .jsonl:
 python scripts/prepare_chat_dataset.py --model_id microsoft/phi-3-mini-4k-instruct --input_dir data/incoming_instruction --output_dir data/tokenized/
-4.	Fine-Tune the Model
-After tokenizing, train the model using:
+4.	Fine-Tune the Model:
 python scripts/train.py --train_config config/train_qlora.yaml --model_config config/model_phi3.yaml --experiment_config config/experiment.yaml --dataset_name alpaca
 
