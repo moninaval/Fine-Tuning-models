@@ -10,30 +10,74 @@ def load_instruction_jsonl(path):
     with open(path, "r", encoding="utf-8") as f:
         return [json.loads(line) for line in f]
 
+import json
+
 def tokenize_examples(examples, tokenizer, max_len):
-    input_texts = [
-        f"{ex['instruction'].strip()}\n\n{ex['input'].strip()}" if ex['input'].strip()
-        else ex['instruction'].strip()
-        for ex in examples
-    ]
-    target_texts = [ex['output'].strip() for ex in examples]
-    print("tokenize_examples 1")
-    model_inputs = tokenizer(
-        input_texts,
-        max_length=max_len,
-        truncation=True,
-        padding="max_length"
-    )
-    print("tokenize_examples 2")
-    with tokenizer.as_target_tokenizer():
-        labels = tokenizer(
-            target_texts,
+    print(f"[INFO] Received {len(examples)} examples")
+
+    if not examples:
+        print("[WARNING] No examples passed to tokenizer.")
+        return {}
+
+    # Print the first few examples for inspection
+    print("[DEBUG] First 1-2 examples:")
+    for i, ex in enumerate(examples[:2]):
+        print(f"Example {i}: {json.dumps(ex, indent=2)}")
+
+    # Validate that all keys exist
+    for i, ex in enumerate(examples):
+        if not all(k in ex for k in ("instruction", "input", "output")):
+            print(f"[ERROR] Missing required keys in example {i}: {ex}")
+            raise ValueError(f"Example {i} missing required keys.")
+
+    # Prepare input and target texts
+    try:
+        input_texts = [
+            f"{ex['instruction'].strip()}\n\n{ex['input'].strip()}" if ex['input'].strip()
+            else ex['instruction'].strip()
+            for ex in examples
+        ]
+        target_texts = [ex['output'].strip() for ex in examples]
+        print("[INFO] Prepared input and target texts.")
+    except Exception as e:
+        print(f"[ERROR] While preparing input/target texts: {e}")
+        raise
+
+    # Print sample input/target
+    print("[DEBUG] Sample input text:", input_texts[0] if input_texts else "None")
+    print("[DEBUG] Sample target text:", target_texts[0] if target_texts else "None")
+
+    # Tokenize inputs
+    try:
+        print("[INFO] Tokenizing input texts...")
+        model_inputs = tokenizer(
+            input_texts,
             max_length=max_len,
             truncation=True,
             padding="max_length"
-        )["input_ids"]
-    print("tokenize_examples 3")
+        )
+        print("[INFO] Tokenization of input texts complete.")
+    except Exception as e:
+        print(f"[ERROR] During input tokenization: {e}")
+        raise
+
+    # Tokenize outputs as labels
+    try:
+        print("[INFO] Tokenizing target texts...")
+        with tokenizer.as_target_tokenizer():
+            labels = tokenizer(
+                target_texts,
+                max_length=max_len,
+                truncation=True,
+                padding="max_length"
+            )["input_ids"]
+        print("[INFO] Tokenization of target texts complete.")
+    except Exception as e:
+        print(f"[ERROR] During label tokenization: {e}")
+        raise
+
     model_inputs["labels"] = labels
+    print("[INFO] Returning model inputs.")
     return model_inputs
 
 def load_seen(path=SEEN_FILE):
