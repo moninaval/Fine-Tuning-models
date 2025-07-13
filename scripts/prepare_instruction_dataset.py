@@ -99,7 +99,7 @@ def main():
     args = parser.parse_args()
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_id, trust_remote_code=True)
-    seq_len = tokenizer.model_max_length
+    seq_len = 512 #tokenizer.model_max_length
     print(f"🔹 Tokenizer max length = {seq_len}")
 
     seen = load_seen()
