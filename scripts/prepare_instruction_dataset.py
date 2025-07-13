@@ -17,14 +17,14 @@ def tokenize_examples(examples, tokenizer, max_len):
         for ex in examples
     ]
     target_texts = [ex['output'].strip() for ex in examples]
-
+    print("tokenize_examples 1")
     model_inputs = tokenizer(
         input_texts,
         max_length=max_len,
         truncation=True,
         padding="max_length"
     )
-
+    print("tokenize_examples 2")
     with tokenizer.as_target_tokenizer():
         labels = tokenizer(
             target_texts,
@@ -32,7 +32,7 @@ def tokenize_examples(examples, tokenizer, max_len):
             truncation=True,
             padding="max_length"
         )["input_ids"]
-
+    print("tokenize_examples 3")
     model_inputs["labels"] = labels
     return model_inputs
 
@@ -67,7 +67,7 @@ def main():
             continue
 
         path = os.path.join(args.input_dir, file)
-        print(f"🚀 Processing {file} ,{path}")
+        print(f"🚀 Processing {path}")
         examples = load_instruction_jsonl(path)
         print("1loaded jsonl file")
         tokenized = tokenize_examples(examples, tokenizer, seq_len)
