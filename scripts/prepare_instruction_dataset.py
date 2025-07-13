@@ -67,15 +67,16 @@ def main():
             continue
 
         path = os.path.join(args.input_dir, file)
-        print(f"🚀 Processing {file}")
+        print(f"🚀 Processing {file} ,{__path__}")
         examples = load_instruction_jsonl(path)
-
+        print("1loaded jsonl file")
         tokenized = tokenize_examples(examples, tokenizer, seq_len)
+        print("2loaded jsonl file")
         dataset = Dataset.from_dict(tokenized)
-
+        print("3loaded jsonl file")
         out_folder = os.path.join(args.output_dir, file.replace(".jsonl", ""))
         os.makedirs(out_folder, exist_ok=True)
-
+        print("loaded jsonl file")
         dataset.save_to_disk(out_folder)
         print(f"✅ Saved tokenized dataset to: {out_folder}")
 
