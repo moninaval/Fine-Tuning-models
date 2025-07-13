@@ -67,7 +67,7 @@ def main():
             continue
 
         path = os.path.join(args.input_dir, file)
-        print(f"🚀 Processing {file} ,{__path__}")
+        print(f"🚀 Processing {file} ,{path}")
         examples = load_instruction_jsonl(path)
         print("1loaded jsonl file")
         tokenized = tokenize_examples(examples, tokenizer, seq_len)
