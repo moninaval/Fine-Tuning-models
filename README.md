@@ -40,3 +40,30 @@ python scripts/prepare_chat_dataset.py --model_id microsoft/phi-3-mini-4k-instru
 4.	Fine-Tune the Model:
 python scripts/train.py --train_config config/train_qlora.yaml --model_config config/model_phi3.yaml --experiment_config config/experiment.yaml --dataset_name alpaca
 
+!python inference.py \
+  --base_model microsoft/phi-3-mini-4k-instruct \
+  --adapter_or_model checkpoints/checkpoints01 \
+  --prompt "What are the three primary colors?"
+
+
+We use QLoRA to fine-tune the phi-3-mini-4k-instruct model incrementally each night.
+Each training run produces a new adapter checkpoint (e.g., checkpoints/checkpoint01, checkpoint02, etc.).
+The base model remains fixed, while only the adapters are updated with new data.
+The next training run uses the latest adapter as a starting point for continued learning.
+Only the adapter path in config/model_phi3.yaml needs to be updated nightly.
+The training command (scripts/train.py ...) remains unchanged.(model.yaml file will be updated with new checkpoints and train.py code shall be modified to train on particluar/last adaptor)
+This approach is memory-efficient, as only ~12M parameters are trained.
+It supports continuous learning without retraining from scratch.
+Adapters are kept separate for modularity and versioning.
+The model evolves nightly, learning from each day’s new dataset.
+
+For sheduled training
+python scripts/train.py \
+  --tokenized_dir data/tokenized/ \
+  --dataset_name alpaca \
+  --train_config config/train_qlora.yaml \
+  --model_config config/model_phi3.yaml \
+  --experiment_config config/experiment.yaml \
+  --checkpoint_dir checkpoints/checkpoint11 \
+  --resume_checkpoint_path checkpoints/checkpoint10
+
