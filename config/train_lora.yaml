@@ -1,23 +1,34 @@
 peft:
-  mode: lora                      # Full-precision base model + LoRA adapters
+  mode: lora                                 # 🔁 Changed from qlora to lora
   task_type: "CAUSAL_LM"
-  target_modules:
-    - q_proj
-    - v_proj
-    - w1
-    # Original base weights (q_proj, v_proj, etc.) are in full precision
-    # They are frozen by default unless manually unfrozen
-
+  target_modules: ["qkv_proj", "o_proj", "gate_up_proj", "down_proj"]
   lora_r: 8
   lora_alpha: 16
   lora_dropout: 0.05
   bias: "none"
-
   trainable_parts:
-    train_embeddings: false       # Optional: train input embeddings
-    train_output_head: true       # Optional: train output head (lm_head)
-    train_norm_layers: false      # Optional: train LayerNorm layers
-    # Note: Full model weights are in FP16/FP32, but only adapters + above parts are trainable
+    train_embeddings: false
+    train_output_head: true
+    train_norm_layers: false
 
 quantization:
-  enabled: false                  # No quantization in LoRA mode
+  enabled: false                             # ❌ No 4-bit quantization on CPU
+  load_in_4bit: false                        # Removed bitsandbytes dependencies
+
+train:
+  output_dir: "checkpoints"
+  max_steps: 100
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 4
+  num_train_epochs: 1
+  learning_rate: 2e-4
+  eval_steps: 100
+  save_steps: 100
+  save_total_limit: 2
+  logging_steps: 20
+  use_fp16: false                            # ❌ FP16 not supported on CPU
+  use_bf16: false
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.05
+  seed: 42
+  report_to: "none"
