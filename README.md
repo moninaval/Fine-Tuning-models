@@ -45,6 +45,16 @@ python scripts/train.py --train_config config/train_qlora.yaml --model_config co
   --adapter_or_model checkpoints/checkpoints01 \
   --prompt "What are the three primary colors?"
 
+merge the lora with base model
+!python scripts/merge_adapter_for_finaldeployment.py -base_model microsoft/phi-3-mini-4k-instruct --adapter checkpoints/checkpoints01 --output_dir merged_path
+
+infrence with merged model
+!python inference.py \
+  --base_model microsoft/phi-3-mini-4k-instruct \
+  --adapter_or_model merged_path \
+  --merged
+  --prompt "What are the three primary colors?"
+
 
 We use QLoRA to fine-tune the phi-3-mini-4k-instruct model incrementally each night.
 Each training run produces a new adapter checkpoint (e.g., checkpoints/checkpoint01, checkpoint02, etc.).
